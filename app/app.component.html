@@ -1,0 +1,29 @@
+<div class="container-fluid">
+    <div class="row content">
+        <div class="col-sm-2 sidenav hidden-xs">
+            <h2 style="font-size: 2.7em">Testing students</h2>
+            <ul class="nav nav-pills nav-stacked">
+                <li routerLinkActive="active">
+                    <a routerLink="/home" routerLinkActive="active">Home</a>
+                </li>
+                <li routerLinkActive="active" *ngIf="isShowLogin()">
+                    <a routerLink="/login">Login</a>
+                </li>
+                <li routerLinkActive="active" *ngIf="!isShowLogin()">
+                    <a routerLink="/login" (click)="doLogout()" routerLinkActive="active">Logout</a>
+                </li>
+                <li routerLinkActive="active" *ngIf="!isTestPermissioned()">
+                    <a routerLink="/test" routerLinkActive="active">Test</a>
+                </li>
+            </ul>
+            <br>
+        </div>
+        <br>
+
+        <div class="col-sm-10">
+            <div class="well">
+                <router-outlet></router-outlet>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,21 @@
+<h2>Account</h2>
+
+<ul>
+    <li *ngFor="let account of accounts">
+        <span>{{account.login}}</span>
+        <span>{{account.password}}</span>
+
+        <button>x</button>
+    </li>
+
+    <span>{{errorMessage}}</span>
+</ul>
+
+<!--<h2>Create account!</h2>-->
+<!--<div>-->
+    <!--<input [(ngModel)]="account.login" placeholder="login"/>-->
+<!--</div>-->
+<!--<div>-->
+    <!--<input [(ngModel)]="account.password" placeholder="name"/>-->
+<!--</div>-->
+<!--<button (click)="addAccount()">Save</button>-->

@@ -1,0 +1,19 @@
+
+
+<form>
+    <div class="form-group">
+        <label for="inputLogin">Логин</label>
+        <input type="text" class="form-control" id="inputLogin" placeholder="Логин" required
+               #login>
+    </div>
+    <div class="form-group">
+        <label for="inputPassword">Пароль</label>
+        <input type="password" class="form-control" id="inputPassword" placeholder="Пароль" required
+               #password>
+    </div>
+
+    <span>{{errorMessage}}</span>
+    <button (click)="doLogin(login.value, password.value)"
+            class="btn waves-effect waves-light"
+            type="submit" name="action">Войти</button>
+</form>

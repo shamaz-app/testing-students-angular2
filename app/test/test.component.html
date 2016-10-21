@@ -1,0 +1,88 @@
+<ol class="breadcrumb">
+    <li class="breadcrumb-item active">Tests</li>
+</ol>
+<div>
+    <button type="button" class="btn btn-success" style="margin: .5em;"
+            *ngIf="!addOrUpdateMode" (click)="addOrEdit()">
+        Добавить
+    </button>
+
+    <form class="form-inline" style="margin: .5em; margin-bottom: 20px"
+          *ngIf="addOrUpdateMode" (ngSubmit)="saveTest()">
+        <div class="form-group">
+            <input class="form-control" [(ngModel)]="testForEdit.description" placeholder="Описание теста"
+                   [ngModelOptions]="{standalone: true}">
+        </div>
+
+        <button type="submit" class="btn btn-success">
+            Сохранить
+        </button>
+        <button type="reset" class="btn btn-default" (click)="cancelAddOrEdit()">
+            Отмена
+        </button>
+    </form>
+
+    <!--<div class="paginationTest">-->
+    <!--<ol *ngFor="let test of paginationTest">-->
+    <!--<li><p>{{test.description}}</p></li>-->
+    <!--</ol>-->
+    <!--</div>-->
+
+    <div style="min-height: 500px;">
+        <table class="table table-hover table-responsive">
+            <thead>
+            <tr>
+                <th>Название теста</th>
+                <th style="max-width: 100px">Действия</th>
+            </tr>
+            </thead>
+            <tbody *ngFor="let test of paginationTest?.content
+            | paginate: {
+            itemsPerPage: paginationTest?.size,
+            currentPage: paginationTest?.number + 1,
+            totalItems: paginationTest?.totalElements}">
+            <tr>
+                <td>{{test.description}}
+                </td>
+                <td style="overflow: hidden; width: 300px;">
+                    <button type="button" (click)="goToThemes(test)" class="btn btn-primary">Подробнее...</button>
+                    <button type="button" (click)="addOrEdit(test)" class="btn btn-success">Редактировать</button>
+                    <button type="button" (click)="deleteTest(test)" class="btn btn-warning">Удалить</button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div style="text-align: center; height: 50px">
+
+        <pagination-controls (pageChange)="pageChanged($event)" class="pagination"
+                             style="cursor: default; text-align: center;">
+        </pagination-controls>
+
+    </div>
+</div>
+
+<!--<ul class="paginationTest">-->
+<!--<li *ngFor="let test of paginationTest">-->
+<!--<div style="height: 50%;">-->
+<!--<div class="col-sm-12">-->
+<!--<div class="col-sm-11 selectableDiv" style="height: 100%" (click)="addOrEdit(test)">-->
+<!--<span style="margin: 7px;">{{test.description}}</span>-->
+<!--</div>-->
+<!--<div class="col-sm-1">-->
+
+<!--<div class="badge closeDiv" (click)="deleteTest(test)" routerLinkActive="active">-->
+<!--<button class="action actionButton">x</button>-->
+<!--</div>-->
+<!--</div>-->
+<!--</div>-->
+<!--</div>-->
+<!--<div style="height: 50%; border-top: 1px solid #c3c3c3; font-weight: normal">-->
+<!--<div class="col-sm-4" style="padding: 7px;">Вопросов</div>-->
+<!--<div class="col-sm-4" style="padding: 7px;">Тем</div>-->
+<!--<div class="col-sm-4" style="text-align: right;">-->
+<!--<button type="button" (click)="goToThemes(test)" class="btn btn-primary">Подробнее...</button>-->
+<!--</div>-->
+<!--</div>-->
+<!--</li>-->
+<!--</ul>-->

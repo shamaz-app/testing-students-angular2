@@ -1,0 +1,82 @@
+<ol class="breadcrumb">
+    <li class="breadcrumb-item"><a routerLink="/test">Tests</a></li>
+    <li class="breadcrumb-item active">Themes</li>
+</ol>
+
+<div style="height: 100%;">
+    <div class="col-sm-6">
+
+        <button type="button" class="btn btn-success" style="margin: .5em;"
+                *ngIf="!addOrUpdateMode" (click)="addOrEdit()">
+            Добавить
+        </button>
+
+        <form class="form-inline" style="margin: .5em; margin-bottom: 20px"
+              *ngIf="addOrUpdateMode" (ngSubmit)="saveTheme()">
+            <div class="form-group">
+                <input class="form-control" [(ngModel)]="themeForEdit.theme" placeholder="Тема" required
+                       [ngModelOptions]="{standalone: true}">
+            </div>
+
+            <button type="submit" class="btn btn-success">
+                Сохранить
+            </button>
+            <button type="reset" class="btn btn-default" (click)="cancelAddOrEdit()">
+                Отмена
+            </button>
+        </form>
+
+    </div>
+
+    <div class="col-sm-7" *ngIf="selectedQuestion">
+        <div class="form-group col-sm-12">
+            <label for="comment">Вопрос:</label>
+            <textarea class="form-control" rows="5" id="comment" [(ngModel)]="selectedQuestion.question"></textarea>
+        </div>
+        <div class="col-sm-12">
+            <div *ngFor="let answerOption of selectedQuestion?.answerOptions" class="checkbox">
+                <label>
+                    <input type="checkbox" [(ngModel)]="answerOption.right">
+                    <input class="form-control" [(ngModel)]="answerOption.option" placeholder="Тема">
+                </label>
+            </div>
+            <button type="button" class="btn btn-success" style="margin: .5em;"
+                    (click)="onSaveQuestion()">
+                Сохранить
+            </button>
+        </div>
+    </div>
+
+
+
+    <div class="col-sm-5">
+
+        <select class="form-control" data-live-search="true"
+                [ngModel]="selectedDevice" (ngModelChange)="onActionClickSelectMenu($event)" style="width: 50%;">
+            <option [value]="null"></option>
+            <option *ngFor="let theme of themes" [value]="theme.id">
+                {{ theme.theme }}
+            </option>
+        </select>
+
+        <form name="search" action="#" method="get" class="form-inline form-search pull-right">
+            <div class="input-group">
+                <input class="form-control" id="searchInput" type="text" name="search" placeholder="Поиск">
+                <div class="input-group-btn">
+                    <button type="submit" class="btn btn-primary">
+                        <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                    </button>
+                </div>
+            </div>
+        </form>
+        <ul class="list-group tests">
+            <li *ngFor="let question of paginationQuestion?.content | paginate: { itemsPerPage: paginationQuestion?.size,currentPage: paginationQuestion?.number + 1, totalItems: paginationQuestion?.totalElements}"
+                class="list-group-item"
+                (click)="(onSelectTest(question))"
+                [class.selected]="question === selectedQuestion">
+
+                <span>{{question.question}}</span>
+            </li>
+        </ul>
+    </div>
+</div>
