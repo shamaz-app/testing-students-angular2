@@ -20,7 +20,7 @@ export class HttpService {
     constructor(public http: Http, public router: Router) {
     };
 
-    private serverUrl = 'http://localhost:8081';
+    private serverUrl = 'http://localhost:8089';
 
     private createAuthorizationHeader(headers: Headers) {
         headers.append('Authorization', 'Bearer ' + localStorage.getItem('access_token'));
@@ -67,27 +67,37 @@ export class HttpService {
             );
     }
 
-    getQuestions(testId: string, themeId: string) {
+    getQuestions(testId: string, themeId: string, questionFilter: string, page: number) {
         let headers = new Headers();
         headers.append('Content-Type', 'application/x-www-form-urlencoded; charset=utf-8');
         this.createAuthorizationHeader(headers);
+            return this.http.get(this.getUrlForGetQuestions(testId, themeId, questionFilter, page), {headers})
+                .map(res => res.json()
+                );
+    }
+
+    private getUrlForGetQuestions(testId: string, themeId: string, questionFilter: string, page: number): string {
+        let url = this.serverUrl;
 
         if (themeId == null || themeId == undefined) {
-            return this.http.get(this.serverUrl + '/api/test/question?testId=' + testId, {headers})
-                .map(res => res.json()
-                );
+            url += '/api/test/question?testId=' + testId;
         } else {
-            return this.http.get(this.serverUrl + '/api/test/question?themeId=' + themeId + '&testId=' + testId, {headers})
-                .map(res => res.json()
-                );
+            url += '/api/test/question?themeId=' + themeId;
         }
+        if (questionFilter !== undefined && questionFilter.length > 0) {
+            url += '&questionFilter=' + questionFilter;
+        }
+        if (page !== undefined) {
+            url += '&page=' + page;
+        }
+        return url;
     }
 
     putQuestion(question: Question) {
         let headers = new Headers();
         headers.append('Content-Type', 'application/json');
         this.createAuthorizationHeader(headers);
-        return this.http.put(this.serverUrl + '/api/test/question',JSON.stringify(question), {headers});
+        return this.http.put(this.serverUrl + '/api/test/question', JSON.stringify(question), {headers});
     }
 
     putTheme(themeForPut: Theme) {
@@ -109,6 +119,14 @@ export class HttpService {
         this.createAuthorizationHeader(headers);
 
         return this.http.delete(this.serverUrl + '/api/test/theme/' + theme.id, {headers});
+    }
+
+    deleteQuestion(question: Question) {
+        let headers = new Headers();
+        headers.append('Content-Type', 'application/x-www-form-urlencoded; charset=utf-8');
+        this.createAuthorizationHeader(headers);
+
+        return this.http.delete(this.serverUrl + '/api/test/question/' + question.id, {headers});
     }
 
     handleError(status: string) {

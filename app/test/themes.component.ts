@@ -10,6 +10,7 @@ import {HttpService} from '../http.service';
 import {Theme} from '../test/theme';
 import {Question} from '../test/question';
 import {PaginationQuestion} from "./question/pagination-question";
+import {AnswerOption} from "./question/answer-option";
 
 @Component({
     selector: 'themes-list',
@@ -28,6 +29,7 @@ export class ThemesComponent implements OnInit {
     public themes: Theme[];
     public themeForEdit: Theme;
     public addOrUpdateMode: boolean;
+    public questionFilter: string;
     public paginationQuestion: PaginationQuestion;
 
     public selectedQuestion: Question;
@@ -37,26 +39,30 @@ export class ThemesComponent implements OnInit {
             this.testId = params['testId'];
         });
         this.getThemes();
-        this.getQuestions();
+        this.getQuestions(0);
     }
 
     getThemes() {
         this.httpService.getThemes(this.testId)
             .subscribe(
                 response => {
-                    this.themes = response.content;
+                    this.themes = response;
                 }
             );
     }
 
-    onActionClickSelectMenu(themeId) {
+    onActionClickSelectMenu(themeId: string) {
         this.themeId = themeId;
         this.selectedQuestion = null;
-        this.getQuestions();
+        this.getQuestions(0);
     }
 
-    getQuestions() {
-        this.httpService.getQuestions(this.testId, this.themeId)
+    onActionChangeThemeOfQuestion(theme: string) {
+        this.selectedQuestion.themeDto.id = theme;
+    }
+
+    getQuestions(page: number) {
+        this.httpService.getQuestions(this.testId, this.themeId, this.questionFilter, page)
             .subscribe(
                 res => {
                     this.paginationQuestion = res;
@@ -66,7 +72,6 @@ export class ThemesComponent implements OnInit {
                 }
             );
     }
-
 
 
     addOrEdit(theme: Theme) {
@@ -119,8 +124,48 @@ export class ThemesComponent implements OnInit {
     onSaveQuestion() {
         this.httpService.putQuestion(this.selectedQuestion).subscribe(
             response => {
-                this.getQuestions();
+                this.getQuestions(0);
+                this.selectedQuestion = null;
             }
         );
     }
+
+    onDeleteQuestion() {
+        if (confirm("Вы действительно хотите удалить вопрос?")) {
+            this.httpService.deleteQuestion(this.selectedQuestion).subscribe(
+                response => {
+                    this.getQuestions(0);
+                    this.selectedQuestion = null;
+                }
+            );
+        }
+    }
+
+    onResetQuestion() {
+        this.selectedQuestion = null;
+    }
+
+    onActionCreateQuestion() {
+        this.selectedQuestion = new Question();
+        this.selectedQuestion.themeDto = new Theme();
+        this.selectedQuestion.answerOptions = [new AnswerOption()];
+
+    }
+
+    deleteAnswerOption(answerOption: AnswerOption) {
+        this.selectedQuestion.answerOptions.forEach(function (obj) {
+            if (obj === answerOption) {
+                obj.deleted = true;
+            }
+        });
+    }
+
+    addAnswerOption() {
+        this.selectedQuestion.answerOptions.push(new AnswerOption());
+    }
+
+
+    pageChanged(event: any): void {
+        this.getQuestions(event - 1);
+    };
 }

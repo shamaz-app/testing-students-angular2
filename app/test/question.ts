@@ -5,16 +5,8 @@ import {AnswerOption} from "./question/answer-option";
  */
 
 export class Question {
-     id: string;
+    id: string;
     question: string;
     themeDto: Theme;
-    answerOptions: AnswerOption[];
-
-
-    constructor(id: string, question: string, themeDto: Theme, answerOptions: AnswerOption[]) {
-        this.id = id;
-        this.question = question;
-        this.themeDto = themeDto;
-        this.answerOptions = answerOptions;
-    }
+    answerOptions: Array<AnswerOption>;
 }

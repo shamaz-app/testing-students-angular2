@@ -12,7 +12,7 @@ import { Router } from '@angular/router';
 export class AuthService {
 
 
-    private serverUrl = 'http://localhost:8081';
+    private serverUrl = 'http://localhost:8089';
     public errorMessage: string;
 
     constructor(public http: Http, public router: Router) {  }
